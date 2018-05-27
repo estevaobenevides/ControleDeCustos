@@ -8,6 +8,10 @@
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Migrations\20180527025225_CreateDepartamentoFuncionarioMovimento.cs" />
+    <Compile Remove="Migrations\20180527025730_CreateDepartamentoFuncionarioMovimento.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.3" />

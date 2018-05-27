@@ -16,9 +16,10 @@ using System;
 namespace ControleDeCustos.Migrations
 {
     [DbContext(typeof(ControleDeCustosDbContext))]
-    partial class ControleDeCustosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180527030538_CreateDepartamentoFuncionarioMovimento")]
+    partial class CreateDepartamentoFuncionarioMovimento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
