@@ -43,6 +43,7 @@ import { MovimentacoesComponent } from './movimentacoes/movimentacoes.component'
 import { CreateMovimentacaoComponent } from './movimentacoes/create-movimentacao/create-movimentacao.component';
 import { EditMovimentacaoComponent } from './movimentacoes/edit-movimentacao/edit-movimentacao.component';
 import { ViewFuncionariosComponent } from './departamentos/view-funcionarios/view-funcionarios.component';
+import { ViewDepartamentosComponent } from './funcionarios/view-departamentos/view-departamentos.component';
 
 @NgModule({
     declarations: [
@@ -73,7 +74,8 @@ import { ViewFuncionariosComponent } from './departamentos/view-funcionarios/vie
         MovimentacoesComponent,
         CreateMovimentacaoComponent,
         EditMovimentacaoComponent,
-        ViewFuncionariosComponent
+        ViewFuncionariosComponent,
+        ViewDepartamentosComponent
 
     ],
     imports: [

@@ -4,6 +4,7 @@ import { PagedListingComponentBase, PagedRequestDto } from 'shared/paged-listing
 import { FuncionarioDto, FuncionarioServiceProxy, PagedResultDtoOfFuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
 import { CreateFuncionarioComponent } from './create-funcionario/create-funcionario.component';
 import { EditFuncionarioComponent } from './edit-funcionario/edit-funcionario.component';
+import { ViewDepartamentosComponent } from './view-departamentos/view-departamentos.component';
 
 @Component({
   selector: 'app-funcionarios',
@@ -14,6 +15,7 @@ export class FuncionariosComponent extends PagedListingComponentBase<Funcionario
 
   @ViewChild('createFuncionarioModal') createFuncionarioModal: CreateFuncionarioComponent;
   @ViewChild('editFuncionarioModal') editFuncionarioModal: EditFuncionarioComponent;
+  @ViewChild('viewDepartamentoModal') viewDepartamentoModal: ViewDepartamentosComponent;
 
   active = false;
   funcionarios: FuncionarioDto[] = [];
@@ -58,6 +60,10 @@ export class FuncionariosComponent extends PagedListingComponentBase<Funcionario
 
   editFuncionario(funcionario: FuncionarioDto): void {
     this.editFuncionarioModal.show(funcionario.id);
+  }
+
+  viewDepartamentos(funcionario: FuncionarioDto): void {
+    this.viewDepartamentoModal.listByFuncionario(funcionario.id);
   }
 
 }

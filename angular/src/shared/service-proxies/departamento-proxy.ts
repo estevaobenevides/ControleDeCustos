@@ -361,7 +361,9 @@ export class DepartamentoServiceProxy {
       });
     }
     return Observable.of<PagedResultDtoOfDepartamentoDto>(<any>null);
-  }/**
+  }
+  
+  /**
    * @return Success
    */
   getFuncionarios(id: number): Observable<PagedResultDtoOfFuncionarioDto> {
