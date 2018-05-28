@@ -3,6 +3,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
 using ControleDeCustos.Funcionarios.Dto;
+using ControleDeCustos.Managers;
 using ControleDeCustos.Models;
 
 namespace ControleDeCustos.Funcionarios

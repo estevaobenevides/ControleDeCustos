@@ -1,5 +1,5 @@
 {
-  "name": "ControleDeCustos",
+  "name": "controledecustos",
   "version": "0.0.0",
   "license": "MIT",
   "angular-cli": {},
@@ -90,5 +90,22 @@
     "tslint": "^5.7.0",
     "typescript": "2.7.2",
     "@angular-devkit/build-angular": "~0.6.3"
-  }
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0-beta.31.",
+  "main": "karma.conf.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igorrarruda/ControleDeCustos.git"
+  },
+  "keywords": [
+    "controledecustos",
+    "controle",
+    "custos",
+    "lanlink"
+  ],
+  "author": "Igor Arruda <igorrarruda@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/igorrarruda/ControleDeCustos/issues"
+  },
+  "homepage": "https://github.com/igorrarruda/ControleDeCustos#readme"
 }

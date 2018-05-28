@@ -968,7 +968,7 @@ namespace ControleDeCustos.Migrations
 
                     b.HasIndex("DepartamentoId");
 
-                    b.ToTable("FuncionarioDepartamento");
+                    b.ToTable("FuncionarioDepartamentos");
                 });
 
             modelBuilder.Entity("ControleDeCustos.Models.Movimentacao", b =>

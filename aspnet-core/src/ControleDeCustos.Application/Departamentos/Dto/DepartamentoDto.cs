@@ -8,5 +8,6 @@ namespace ControleDeCustos.Departamentos.Dto
     public class DepartamentoDto : EntityDto<int>
     {
         public string Nome { get; set; }
+        public int QuantidadeFuncionarios { get; set; }
     }
 }

@@ -1,50 +1,40 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Abp.Application.Services;
-using AutoMapper;
-using ControleDeCustos.Movimentacoes.DTO;
+using ControleDeCustos.Movimentacoes.Dto;
 using ControleDeCustos.Models;
+using ControleDeCustos.Managers;
+using Abp.Application.Services.Dto;
+using Abp.Domain.Repositories;
 
 namespace ControleDeCustos.Movimentacoes
 {
-    public class MovimentacaoAppService : ApplicationService, IMovimentacaoAppService
+    public class MovimentacaoAppService : AsyncCrudAppService<Movimentacao, MovimentacaoDto, int, PagedResultRequestDto, CreateMovimentacaoDto, MovimentacaoDto>, IMovimentacaoAppService
     {
         private readonly IMovimentacaoManager _movimentacaoManager;
-        public MovimentacaoAppService(IMovimentacaoManager movimentacaoManager)
+
+        public MovimentacaoAppService(IRepository<Movimentacao> repository, IMovimentacaoManager movimentacaoManager)
+            : base(repository)
         {
             _movimentacaoManager = movimentacaoManager;
         }
 
-        public async Task Create(CreateMovimentacaoInput input)
+        public override async Task<MovimentacaoDto> Create(CreateMovimentacaoDto input)
         {
-            Movimentacao output = Mapper.Map<CreateMovimentacaoInput, Movimentacao>(input);
-            await _movimentacaoManager.Create(output);
+            var entity = ObjectMapper.Map<Movimentacao>(input);
+            var output = await _movimentacaoManager.Create(entity);
+            return MapToEntityDto(output);
         }
 
-        public void Delete(DeleteMovimentacaoInput input)
+        public override async Task Delete(EntityDto<int> input)
         {
-            _movimentacaoManager.Delete(input.Id);
+            await _movimentacaoManager.Delete(input.Id);
         }
 
-        public GetMovimentacaoOutput GetById(GetMovimentacaoInput input)
+        public override async Task<MovimentacaoDto> Update(MovimentacaoDto input)
         {
-            var movimentacao = _movimentacaoManager.GetById(input.Id);
-            GetMovimentacaoOutput output = Mapper.Map<Movimentacao, GetMovimentacaoOutput>(movimentacao);
-            return output;
-        }
-
-        public IEnumerable<GetMovimentacaoOutput> ListAll()
-        {
-            var list = _movimentacaoManager.GetAllList().ToList();
-            List<GetMovimentacaoOutput> output = Mapper.Map<List<Movimentacao>, List<GetMovimentacaoOutput>>(list);
-            return output;
-        }
-
-        public void Update(UpdateMovimentacaoInput input)
-        {
-            Movimentacao output = Mapper.Map<UpdateMovimentacaoInput, Movimentacao>(input);
-            _movimentacaoManager.Update(output);
+            var entity = ObjectMapper.Map<Movimentacao>(input);
+            var output = await _movimentacaoManager.Update(entity);
+            return MapToEntityDto(output);
         }
     }
 }

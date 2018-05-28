@@ -5,5 +5,6 @@ namespace ControleDeCustos.Funcionarios.Dto
     [AutoMapTo(typeof(FuncionarioDepartamento))]
     public class DepartamentoFuncionarioDto
     {
+        public int DepartamentoId { get; set; }
     }
 }

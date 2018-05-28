@@ -12,6 +12,7 @@ namespace ControleDeCustos.EntityFrameworkCore
         /* Define a DbSet for each entity of the application */
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<FuncionarioDepartamento> FuncionarioDepartamentos { get; set; }
         public DbSet<Movimentacao> Movimentacoes { get; set; }
 
         public ControleDeCustosDbContext(DbContextOptions<ControleDeCustosDbContext> options)

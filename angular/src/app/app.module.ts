@@ -33,6 +33,16 @@ import { SideBarNavComponent } from '@app/layout/sidebar-nav.component';
 import { SideBarFooterComponent } from '@app/layout/sidebar-footer.component';
 import { RightSideBarComponent } from '@app/layout/right-sidebar.component';
 import { MaterialInput } from '@shared/directives/material-input.directive';
+import { DepartamentosComponent } from './departamentos/departamentos.component';
+import { CreateDepartamentoComponent } from './departamentos/create-departamento/create-departamento.component';
+import { EditDepartamentoComponent } from './departamentos/edit-departamento/edit-departamento.component';
+import { FuncionariosComponent } from './funcionarios/funcionarios.component';
+import { CreateFuncionarioComponent } from './funcionarios/create-funcionario/create-funcionario.component';
+import { EditFuncionarioComponent } from './funcionarios/edit-funcionario/edit-funcionario.component';
+import { MovimentacoesComponent } from './movimentacoes/movimentacoes.component';
+import { CreateMovimentacaoComponent } from './movimentacoes/create-movimentacao/create-movimentacao.component';
+import { EditMovimentacaoComponent } from './movimentacoes/edit-movimentacao/edit-movimentacao.component';
+import { ViewFuncionariosComponent } from './departamentos/view-funcionarios/view-funcionarios.component';
 
 @NgModule({
     declarations: [
@@ -40,21 +50,31 @@ import { MaterialInput } from '@shared/directives/material-input.directive';
         HomeComponent,
         AboutComponent,
         TenantsComponent,
-		CreateTenantComponent,
-		EditTenantComponent,
+        CreateTenantComponent,
+        EditTenantComponent,
         UsersComponent,
-		CreateUserComponent,
-		EditUserComponent,
-      	RolesComponent,        
-		CreateRoleComponent,
-		EditRoleComponent,
+        CreateUserComponent,
+        EditUserComponent,
+        RolesComponent,
+        CreateRoleComponent,
+        EditRoleComponent,
         TopBarComponent,
         TopBarLanguageSwitchComponent,
         SideBarUserAreaComponent,
         SideBarNavComponent,
         SideBarFooterComponent,
-        RightSideBarComponent
-    
+        RightSideBarComponent,
+        DepartamentosComponent,
+        CreateDepartamentoComponent,
+        EditDepartamentoComponent,
+        FuncionariosComponent,
+        CreateFuncionarioComponent,
+        EditFuncionarioComponent,
+        MovimentacoesComponent,
+        CreateMovimentacaoComponent,
+        EditMovimentacaoComponent,
+        ViewFuncionariosComponent
+
     ],
     imports: [
         CommonModule,

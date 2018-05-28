@@ -1,16 +1,9 @@
 ﻿using Abp.Application.Services;
-using ControleDeCustos.Movimentacoes.DTO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
+using Abp.Application.Services.Dto;
+using ControleDeCustos.Movimentacoes.Dto;
 namespace ControleDeCustos.Movimentacoes
 {
-    public interface IMovimentacaoAppService : IApplicationService
+    public interface IMovimentacaoAppService : IAsyncCrudAppService<MovimentacaoDto, int, PagedResultRequestDto, CreateMovimentacaoDto, MovimentacaoDto>
     {
-        IEnumerable<GetMovimentacaoOutput> ListAll();
-        Task Create(CreateMovimentacaoInput input);
-        void Update(UpdateMovimentacaoInput input);
-        void Delete(DeleteMovimentacaoInput input);
-        GetMovimentacaoOutput GetById(GetMovimentacaoInput input);
     }
 }

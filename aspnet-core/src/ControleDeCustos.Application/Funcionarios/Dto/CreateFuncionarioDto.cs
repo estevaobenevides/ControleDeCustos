@@ -8,6 +8,6 @@ namespace ControleDeCustos.Funcionarios.Dto
     public class CreateFuncionarioDto
     {
         public string Nome { get; set; }
-        public ICollection<int> Departamentos { get; set; }
+        public IList<DepartamentoFuncionarioDto> Departamentos { get; set; }
     }
 }
