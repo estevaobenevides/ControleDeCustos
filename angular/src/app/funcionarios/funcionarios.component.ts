@@ -66,4 +66,4 @@ export class FuncionariosComponent extends PagedListingComponentBase<Funcionario
     this.viewDepartamentoModal.listByFuncionario(funcionario.id);
   }
 
-}
+} 

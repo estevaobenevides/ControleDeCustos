@@ -365,7 +365,7 @@ export class FuncionarioServiceProxy {
   /**
    * @return Success
    */
-  getDepartamentos(id: number): Observable<PagedResultDtoOfDepartamentoDto> {
+  getDepartamentosById(id: number): Observable<PagedResultDtoOfDepartamentoDto> {
     let url_ = this.baseUrl + '/api/services/app/Funcionario/GetDepartamentos?';
     if (id === undefined || id === null) {
       throw new Error('The parameter \'id\' must be defined and cannot be null.');
@@ -384,11 +384,11 @@ export class FuncionarioServiceProxy {
     };
 
     return this.http.request('get', url_, options_).flatMap((response_: any) => {
-      return this.processGetDepartamentos(response_);
+      return this.processGetDepartamentosById(response_);
     }).catch((response_: any) => {
       if (response_ instanceof HttpResponseBase) {
         try {
-          return this.processGetDepartamentos(<any>response_);
+          return this.processGetDepartamentosById(<any>response_);
         } catch (e) {
           return <Observable<PagedResultDtoOfDepartamentoDto>><any>Observable.throw(e);
         }
@@ -398,7 +398,7 @@ export class FuncionarioServiceProxy {
     });
   }
 
-  protected processGetDepartamentos(response: HttpResponseBase): Observable<PagedResultDtoOfDepartamentoDto> {
+  protected processGetDepartamentosById(response: HttpResponseBase): Observable<PagedResultDtoOfDepartamentoDto> {
     const status = response.status;
     const responseBlob =
       response instanceof HttpResponse ? response.body :
@@ -429,6 +429,67 @@ export class FuncionarioServiceProxy {
       });
     }
     return Observable.of<PagedResultDtoOfDepartamentoDto>(<any>null);
+  }
+  
+
+    /**
+     * @return Success
+     */
+    getDepartamentos(): Observable<ListResultDtoOfDepartamentoDto> {
+      let url_ = this.baseUrl + "/api/services/app/Funcionario/Get/Departamentos";
+      url_ = url_.replace(/[?&]$/, "");
+
+      let options_: any = {
+          observe: "response",
+          responseType: "blob",
+          headers: new HttpHeaders({
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+          })
+      };
+
+      return this.http.request("get", url_, options_).flatMap((response_: any) => {
+          return this.processGetDepartamentos(response_);
+      }).catch((response_: any) => {
+          if (response_ instanceof HttpResponseBase) {
+              try {
+                  return this.processGetDepartamentos(<any>response_);
+              } catch (e) {
+                  return <Observable<ListResultDtoOfDepartamentoDto>><any>Observable.throw(e);
+              }
+          } else
+              return <Observable<ListResultDtoOfDepartamentoDto>><any>Observable.throw(response_);
+      });
+  }
+
+  protected processGetDepartamentos(response: HttpResponseBase): Observable<ListResultDtoOfDepartamentoDto> {
+      const status = response.status;
+      const responseBlob =
+          response instanceof HttpResponse ? response.body :
+              (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+      let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
+      if (status === 200) {
+          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+              let result200: any = null;
+              let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+              result200 = resultData200 ? ListResultDtoOfDepartamentoDto.fromJS(resultData200) : new ListResultDtoOfDepartamentoDto();
+              return Observable.of(result200);
+          });
+      } else if (status === 401) {
+          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+              return ServiceProxy.throwException("A server error occurred.", status, _responseText, _headers);
+          });
+      } else if (status === 403) {
+          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+              return ServiceProxy.throwException("A server error occurred.", status, _responseText, _headers);
+          });
+      } else if (status !== 200 && status !== 204) {
+          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+              return ServiceProxy.throwException("An unexpected server error occurred.", status, _responseText, _headers);
+          });
+      }
+      return Observable.of<ListResultDtoOfDepartamentoDto>(<any>null);
   }
 }
 

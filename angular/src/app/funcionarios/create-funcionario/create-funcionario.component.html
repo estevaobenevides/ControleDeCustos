@@ -13,16 +13,42 @@
             <span>Novo funcionario</span>
           </h4>
         </div>
-        <div class="modal-body">
-          <div class="row clearfix">
-            <div class="col-sm-12">
-              <div class="form-group form-float">
-                <div class="form-line">
-                  <input id="nome" type="text" name="Nome" [(ngModel)]="funcionario.nome" required maxlength="32" class="validate form-control">
-                  <label for="nome" class="form-label">Nome</label>
+
+        <div class="modal-body">          
+
+            <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                <li role="presentation" class="active"><a href="#funcionario-details" data-toggle="tab">Detalhes</a></li>
+                <li role="presentation"><a href="#funcionario-departamentos" data-toggle="tab">Departamentos</a></li>
+            </ul>
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane animated fadeIn active" id="funcionario-details">
+
+                <div class="row clearfix" style="margin-top:10px;">
+
+                  <div class="col-sm-12">
+                    <div class="form-group form-float">
+                      <div class="form-line">
+                        <input id="nome" type="text" name="Nome" [(ngModel)]="funcionario.nome" required maxlength="32" class="validate form-control">
+                        <label for="nome" class="form-label">Nome</label>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
-            </div>
+
+              <div role="tabpanel" class="tab-pane animated fadeIn" id="funcionario-departamentos">
+                  <div class="row">
+                      <div class="col-sm-12 ">
+                          <ng-template ngFor let-departamento [ngForOf]="departamentos" let-departamentoIndex="index">
+                              <div class="col-sm-6">
+                                  <input type="checkbox" name="departamento" value="{{departamento.nome}}" title="{{departamento.nome}}" class="filled-in" id="departamento-{{departamentoIndex}}" checked="checked" />
+                                  <label for="departamento-{{departamentoIndex}}" title="{{departamento.nome}}">{{departamento.nome}}</label>
+                              </div>
+                          </ng-template>
+                      </div>
+                  </div>
+              </div>
           </div>
         </div>
 

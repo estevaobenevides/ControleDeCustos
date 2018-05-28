@@ -18,6 +18,7 @@ export class CreateFuncionarioComponent extends AppComponentBase implements OnIn
   active = false;
   saving = false;
   funcionario: CreateFuncionarioDto = null;
+  departamentos: DepartamentoDto[] = null; 
 
   constructor(
     injector: Injector,
@@ -27,6 +28,10 @@ export class CreateFuncionarioComponent extends AppComponentBase implements OnIn
   }
 
   ngOnInit(): void {
+      this._funcionarioService.getDepartamentos()
+      .subscribe((result) => {
+          this.departamentos = result.items;
+      });
   }
 
   show(): void {

@@ -2,7 +2,7 @@ import { Component, ViewChild, Injector, Output, EventEmitter, ElementRef } from
 import { ModalDirective } from 'ngx-bootstrap';
 import { AppComponentBase } from '@shared/app-component-base';
 import { PagedRequestDto } from '@shared/paged-listing-component-base';
-import { FuncionarioDto, PagedResultDtoOfFuncionarioDto, FuncionarioServiceProxy } from '@shared/service-proxies/funcionario-proxy';
+import { FuncionarioServiceProxy } from '@shared/service-proxies/funcionario-proxy';
 import { DepartamentoDto, PagedResultDtoOfDepartamentoDto } from '@shared/service-proxies/departamento-proxy';
 
 @Component({
@@ -34,7 +34,7 @@ export class ViewDepartamentosComponent extends AppComponentBase {
   }
 
   listByDepartamento(id: number): void {
-    this._funcionarioService.getDepartamentos(id)
+    this._funcionarioService.getDepartamentosById(id)
       .subscribe((result: PagedResultDtoOfDepartamentoDto) => {
         this.departamentos = result.items;
         this.active = true;

@@ -1,3 +1,37 @@
-<p>
-  view-departamentos works!
-</p>
+<div bsModal #viewDepartamentoModal="bs-modal" class="modal fade" (onShown)="onShown()" tabindex="-1" role="dialog" aria-labelledby="viewDepartamentoModal"
+  aria-hidden="true" [config]="{backdrop: 'static'}">
+  <div class="modal-dialog">
+
+    <div #modalContent class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="close()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">
+          <span>Departamentos</span>
+        </h4>
+      </div>
+      <div class="modal-body">
+
+        <table class="table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>Nome</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let departamento of departamentos">
+              <td>{{departamento.nome}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default waves-effect" (click)="close()">
+            Fechar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
