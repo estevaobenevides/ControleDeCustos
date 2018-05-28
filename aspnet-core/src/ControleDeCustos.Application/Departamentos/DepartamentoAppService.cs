@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
@@ -24,13 +25,7 @@ namespace ControleDeCustos.Departamentos
             _departamentoManager = departamentoManager;
             _funcionarioManager = funcionarioManager;
         }
-
-        public async Task<PagedResultDto<DepartamentoDto>> GetAll()
-        {
-            var entity = await _departamentoManager.GetAllList();
-            return new PagedResultDto<DepartamentoDto>(entity.Count, ObjectMapper.Map<List<DepartamentoDto>>(entity));
-        }
-
+        
         public async Task<ListResultDto<FuncionarioDto>> GetFuncionarios(EntityDto<int> input)
         {
             var entity = await _funcionarioManager.GetAllByDepartamento(input.Id);
@@ -56,6 +51,11 @@ namespace ControleDeCustos.Departamentos
             return MapToEntityDto(output);
         }
 
+        protected override IQueryable<Departamento> CreateFilteredQuery(PagedResultRequestDto input)
+        {
+            return Repository.GetAllIncluding(x => x.Funcionarios);
+        }
+
         protected override DepartamentoDto MapToEntityDto(Departamento entity)
         {
             return new DepartamentoDto
@@ -64,6 +64,12 @@ namespace ControleDeCustos.Departamentos
                 Nome = entity.Nome,
                 QuantidadeFuncionarios = entity.Funcionarios == null ? 0 : entity.Funcionarios.Count
             };
+        }
+
+        protected override void MapToEntity(DepartamentoDto updateInput, Departamento entity)
+        {
+            base.MapToEntity(updateInput, entity);
+            updateInput.QuantidadeFuncionarios = entity.Funcionarios == null ? 0 : entity.Funcionarios.Count;
         }
     }
 }

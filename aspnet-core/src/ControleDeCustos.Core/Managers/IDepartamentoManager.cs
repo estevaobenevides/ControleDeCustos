@@ -7,7 +7,6 @@ namespace ControleDeCustos.Managers
 {
     public interface IDepartamentoManager : IDomainService
     {
-        Task<IList<Departamento>> GetAllList();
         Task<Departamento> Create(Departamento entity);
         Task<Departamento> Update(Departamento entity);
         Task Delete(int id);

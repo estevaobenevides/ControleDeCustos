@@ -8,7 +8,6 @@ namespace ControleDeCustos.Departamentos
 {
     public interface IDepartamentoAppService : IAsyncCrudAppService<DepartamentoDto, int, PagedResultRequestDto, CreateDepartamentoDto, DepartamentoDto>
     {
-        Task<PagedResultDto<DepartamentoDto>> GetAll();
         Task<ListResultDto<FuncionarioDto>> GetFuncionarios(EntityDto<int> input);
     }
 }

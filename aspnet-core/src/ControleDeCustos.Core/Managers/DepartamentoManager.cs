@@ -18,13 +18,6 @@ namespace ControleDeCustos.Managers
             _repositoryFuncionarioDepartamento = repositoryFuncionarioDepartamento;
         }
 
-        public async Task<IList<Departamento>> GetAllList()
-        {
-            return await _repositoryDepartamento
-                .GetAllIncluding(d => d.Funcionarios)
-                .ToListAsync();
-        }
-
         public async Task<Departamento> Create(Departamento entity)
         {
             var departamento = _repositoryDepartamento.FirstOrDefault(f => f.Id == entity.Id);

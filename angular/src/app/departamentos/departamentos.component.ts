@@ -64,7 +64,7 @@ export class DepartamentosComponent extends PagedListingComponentBase<Departamen
   }
 
   viewFuncionarios(departamento: DepartamentoDto): void {
-    this.viewFuncionarioDepartamentoModal.show(departamento.id);
+    this.viewFuncionarioDepartamentoModal.listByDepartamento(departamento.id);
   }
 
 }

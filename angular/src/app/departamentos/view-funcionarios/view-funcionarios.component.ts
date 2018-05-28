@@ -12,6 +12,13 @@ import { FuncionarioDto, PagedResultDtoOfFuncionarioDto } from '@shared/service-
 })
 export class ViewFuncionariosComponent extends AppComponentBase {
 
+  protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
+    throw new Error("Method not implemented.");
+  }
+  protected delete(entity: FuncionarioDto): void {
+    throw new Error("Method not implemented.");
+  }
+
   @ViewChild('viewFuncionarioModal') modal: ModalDirective;
   @ViewChild('modalContent') modalContent: ElementRef;
 
@@ -26,10 +33,10 @@ export class ViewFuncionariosComponent extends AppComponentBase {
     super(injector);
   }
 
-  show(id: number): void {
+  listByDepartamento(id: number): void {
     this._departamentoService.getFuncionarios(id)
-      .subscribe((result: FuncionarioDto[]) => {
-        this.funcionarios = result;
+      .subscribe((result: PagedResultDtoOfFuncionarioDto) => {
+        this.funcionarios = result.items;
         this.active = true;
         this.modal.show();
       });

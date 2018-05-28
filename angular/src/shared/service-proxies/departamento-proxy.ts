@@ -364,7 +364,7 @@ export class DepartamentoServiceProxy {
   }/**
    * @return Success
    */
-  getFuncionarios(id: number): Observable<FuncionarioDto[]> {
+  getFuncionarios(id: number): Observable<PagedResultDtoOfFuncionarioDto> {
     let url_ = this.baseUrl + '/api/services/app/Departamento/GetFuncionarios?';
     if (id === undefined || id === null) {
       throw new Error('The parameter \'id\' must be defined and cannot be null.');
@@ -389,15 +389,15 @@ export class DepartamentoServiceProxy {
         try {
           return this.processGetFuncionarios(<any>response_);
         } catch (e) {
-          return <Observable<FuncionarioDto[]>><any>Observable.throw(e);
+          return <Observable<PagedResultDtoOfFuncionarioDto>><any>Observable.throw(e);
         }
       } else {
-        return <Observable<FuncionarioDto[]>><any>Observable.throw(response_);
+        return <Observable<PagedResultDtoOfFuncionarioDto>><any>Observable.throw(response_);
       }
     });
   }
 
-  protected processGetFuncionarios(response: HttpResponseBase): Observable<FuncionarioDto[]> {
+  protected processGetFuncionarios(response: HttpResponseBase): Observable<PagedResultDtoOfFuncionarioDto> {
     const status = response.status;
     const responseBlob =
       response instanceof HttpResponse ? response.body :
@@ -411,7 +411,7 @@ export class DepartamentoServiceProxy {
       return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
         let result200: any = null;
         const resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
-        result200 = resultData200 ? FuncionarioDto.fromJS(resultData200) : [];
+        result200 = resultData200 ? PagedResultDtoOfFuncionarioDto.fromJS(resultData200) : new PagedResultDtoOfFuncionarioDto();
         return Observable.of(result200);
       });
     } else if (status === 401) {
@@ -427,7 +427,7 @@ export class DepartamentoServiceProxy {
         return ServiceProxy.throwException('An unexpected server error occurred.', status, _responseText, _headers);
       });
     }
-    return Observable.of<FuncionarioDto[]>(<any>null);
+    return Observable.of<PagedResultDtoOfFuncionarioDto>(<any>null);
   }
 }
 
