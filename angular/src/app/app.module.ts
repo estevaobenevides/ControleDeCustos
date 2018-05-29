@@ -44,6 +44,8 @@ import { CreateMovimentacaoComponent } from './movimentacoes/create-movimentacao
 import { EditMovimentacaoComponent } from './movimentacoes/edit-movimentacao/edit-movimentacao.component';
 import { ViewFuncionariosComponent } from './departamentos/view-funcionarios/view-funcionarios.component';
 import { ViewDepartamentosComponent } from './funcionarios/view-departamentos/view-departamentos.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { MatAutocompleteModule } from '@angular/material';
 
 @NgModule({
     declarations: [
@@ -88,7 +90,9 @@ import { ViewDepartamentosComponent } from './funcionarios/view-departamentos/vi
         AppRoutingModule,
         ServiceProxyModule,
         SharedModule,
-        NgxPaginationModule
+        NgxPaginationModule,
+        CurrencyMaskModule,
+        MatAutocompleteModule
     ],
     providers: [
 

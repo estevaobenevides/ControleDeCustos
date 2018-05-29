@@ -1,6 +1,5 @@
 ﻿using Abp.AutoMapper;
 using ControleDeCustos.Models;
-using System.Collections.Generic;
 
 namespace ControleDeCustos.Funcionarios.Dto
 {
@@ -8,6 +7,6 @@ namespace ControleDeCustos.Funcionarios.Dto
     public class CreateFuncionarioDto
     {
         public string Nome { get; set; }
-        public IList<DepartamentoFuncionarioDto> Departamentos { get; set; }
+        public int[] DepartamentoIds { get; set; }
     }
 }

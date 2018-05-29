@@ -4,6 +4,7 @@ using Abp.UI;
 using ControleDeCustos.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ControleDeCustos.Managers
@@ -51,6 +52,19 @@ namespace ControleDeCustos.Managers
                 throw new UserFriendlyException("Departamento possui funcionários alocados.");
             }
             await _repositoryDepartamento.DeleteAsync(departamento);
+        }
+
+        public async Task<IEnumerable<Departamento>> GetAllList()
+        {
+            return await _repositoryDepartamento.GetAllListAsync(d => !d.IsDeleted);
+        }
+
+        public async Task<IEnumerable<Departamento>> GetAllByFuncionario(int id)
+        {
+            return await _repositoryDepartamento
+                .GetAllIncluding(f => f.Funcionarios)
+                .Where(f => f.Funcionarios.Any(d => d.FuncionarioId == id) && !f.IsDeleted)
+                .ToListAsync();
         }
     }
 }

@@ -1,7 +1,8 @@
-import { Component, ViewChild, Injector, Output, EventEmitter, ElementRef } from '@angular/core';
+import { Component, ViewChild, ViewChildren, Injector, Output, EventEmitter, ElementRef, QueryList } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
 import { AppComponentBase } from '@shared/app-component-base';
 import { FuncionarioDto, FuncionarioServiceProxy } from '@shared/service-proxies/funcionario-proxy';
+import { DepartamentoDto } from '@shared/service-proxies/departamento-proxy';
 
 @Component({
   selector: 'app-edit-funcionario',
@@ -12,6 +13,7 @@ export class EditFuncionarioComponent extends AppComponentBase {
 
   @ViewChild('editFuncionarioModal') modal: ModalDirective;
   @ViewChild('modalContent') modalContent: ElementRef;
+  @ViewChildren('inputDepartamentos') inputDepartamentos: QueryList<ElementRef>;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
@@ -19,6 +21,7 @@ export class EditFuncionarioComponent extends AppComponentBase {
   saving = false;
 
   funcionario: FuncionarioDto = null;
+  departamentos: DepartamentoDto[] = null;
 
   constructor(
     injector: Injector,
@@ -27,7 +30,20 @@ export class EditFuncionarioComponent extends AppComponentBase {
     super(injector);
   }
 
+  funcionarioInDepartamento(funcionario: FuncionarioDto, departamento: DepartamentoDto): string {
+    if (funcionario.departamentoIds && funcionario.departamentoIds.indexOf(departamento.id) !== -1) {
+      return 'checked';
+    } else {
+      return '';
+    }
+  }
+
   show(id: number): void {
+    this._funcionarioService.getDepartamentos()
+      .subscribe((result) => {
+        this.departamentos = result.items;
+      });
+
     this._funcionarioService.get(id)
       .subscribe(
         (result) => {
@@ -44,6 +60,16 @@ export class EditFuncionarioComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
+    const departamentos = [];
+    this.inputDepartamentos.forEach(
+      (departamento) =>
+        departamentos.push(parseInt(departamento.nativeElement.getAttribute('value'), 0))
+    );
+    if (departamentos.length === 0) {
+      this.notify.info('Selecione pelo menos um departamento.');
+      return;
+    }
+    this.funcionario.departamentoIds = departamentos;
     this._funcionarioService.update(this.funcionario)
       .finally(() => { this.saving = false; })
       .subscribe(() => {

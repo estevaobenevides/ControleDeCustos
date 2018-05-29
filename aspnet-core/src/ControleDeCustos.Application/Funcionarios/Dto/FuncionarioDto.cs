@@ -8,5 +8,6 @@ namespace ControleDeCustos.Funcionarios.Dto
     public class FuncionarioDto : EntityDto<int>
     {
         public string Nome { get; set; }
+        public int[] DepartamentoIds { get; set; }
     }
 }

@@ -1,15 +1,16 @@
 import { Component, OnInit, Injector, ViewChild } from '@angular/core';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedListingComponentBase, PagedRequestDto } from 'shared/paged-listing-component-base';
 import { FuncionarioDto, FuncionarioServiceProxy, PagedResultDtoOfFuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
 import { CreateFuncionarioComponent } from './create-funcionario/create-funcionario.component';
 import { EditFuncionarioComponent } from './edit-funcionario/edit-funcionario.component';
 import { ViewDepartamentosComponent } from './view-departamentos/view-departamentos.component';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-funcionarios',
   templateUrl: './funcionarios.component.html',
-  styleUrls: ['./funcionarios.component.css']
+  styleUrls: ['./funcionarios.component.css'],
+  animations: [appModuleAnimation()]
 })
 export class FuncionariosComponent extends PagedListingComponentBase<FuncionarioDto>  {
 
@@ -63,7 +64,7 @@ export class FuncionariosComponent extends PagedListingComponentBase<Funcionario
   }
 
   viewDepartamentos(funcionario: FuncionarioDto): void {
-    this.viewDepartamentoModal.listByFuncionario(funcionario.id);
+    this.viewDepartamentoModal.listByDepartamento(funcionario.id);
   }
 
-} 
+}

@@ -26,13 +26,13 @@ namespace ControleDeCustos.Managers
         {
             return await _repositoryFuncionario
                 .GetAllIncluding(f => f.Departamentos)
-                .Where(f => f.Departamentos.All(d => d.DepartamentoId == id))
+                .Where(f => f.Departamentos.Any(d => d.DepartamentoId == id) && !f.IsDeleted)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<Funcionario>> GetAllList()
         {
-            return await _repositoryFuncionario.GetAllListAsync();
+            return await _repositoryFuncionario.GetAllListAsync(f => !f.IsDeleted);
         }
 
         public async Task<Funcionario> Create(Funcionario entity)

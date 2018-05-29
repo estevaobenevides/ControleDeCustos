@@ -10,5 +10,7 @@ namespace ControleDeCustos.Managers
         Task<Departamento> Create(Departamento entity);
         Task<Departamento> Update(Departamento entity);
         Task Delete(int id);
+        Task<IEnumerable<Departamento>> GetAllList();
+        Task<IEnumerable<Departamento>> GetAllByFuncionario(int id);
     }
 }

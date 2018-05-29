@@ -3,7 +3,7 @@ import { Injectable, Inject, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponseBase, HttpResponse } from '@angular/common/http';
 import { API_BASE_URL, ListResultDtoOfRoleDto, ServiceProxy } from './service-proxies';
 import { Observable } from 'rxjs/Observable';
-import { PagedResultDtoOfDepartamentoDto } from '@shared/service-proxies/departamento-proxy';
+import { PagedResultDtoOfDepartamentoDto, ListResultDtoOfDepartamentoDto } from '@shared/service-proxies/departamento-proxy';
 
 @Injectable()
 export class FuncionarioServiceProxy {
@@ -361,12 +361,12 @@ export class FuncionarioServiceProxy {
     }
     return Observable.of<PagedResultDtoOfFuncionarioDto>(<any>null);
   }
-  
+
   /**
    * @return Success
    */
-  getDepartamentosById(id: number): Observable<PagedResultDtoOfDepartamentoDto> {
-    let url_ = this.baseUrl + '/api/services/app/Funcionario/GetDepartamentos?';
+  getDepartamentosById(id: number): Observable<ListResultDtoOfDepartamentoDto> {
+    let url_ = this.baseUrl + '/api/services/app/Funcionario/GetDepartamentosById?';
     if (id === undefined || id === null) {
       throw new Error('The parameter \'id\' must be defined and cannot be null.');
     } else {
@@ -390,6 +390,70 @@ export class FuncionarioServiceProxy {
         try {
           return this.processGetDepartamentosById(<any>response_);
         } catch (e) {
+          return <Observable<ListResultDtoOfDepartamentoDto>><any>Observable.throw(e);
+        }
+      } else {
+        return <Observable<ListResultDtoOfDepartamentoDto>><any>Observable.throw(response_);
+      }
+    });
+  }
+
+  protected processGetDepartamentosById(response: HttpResponseBase): Observable<ListResultDtoOfDepartamentoDto> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse ? response.body :
+        (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    const _headers: any = {};
+    if (response.headers) {
+      for (const key of response.headers.keys()) { _headers[key] = response.headers.get(key); }
+    };
+    if (status === 200) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        let result200: any = null;
+        const resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ListResultDtoOfDepartamentoDto.fromJS(resultData200) : new ListResultDtoOfDepartamentoDto();
+        return Observable.of(result200);
+      });
+    } else if (status === 401) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('A server error occurred.', status, _responseText, _headers);
+      });
+    } else if (status === 403) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('A server error occurred.', status, _responseText, _headers);
+      });
+    } else if (status !== 200 && status !== 204) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('An unexpected server error occurred.', status, _responseText, _headers);
+      });
+    }
+    return Observable.of<ListResultDtoOfDepartamentoDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getDepartamentos(): Observable<PagedResultDtoOfDepartamentoDto> {
+    let url_ = this.baseUrl + '/api/services/app/Funcionario/GetAllDepartamentos';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+    };
+
+    return this.http.request('get', url_, options_).flatMap((response_: any) => {
+      return this.processGetDepartamentos(response_);
+    }).catch((response_: any) => {
+      if (response_ instanceof HttpResponseBase) {
+        try {
+          return this.processGetDepartamentos(<any>response_);
+        } catch (e) {
           return <Observable<PagedResultDtoOfDepartamentoDto>><any>Observable.throw(e);
         }
       } else {
@@ -398,7 +462,7 @@ export class FuncionarioServiceProxy {
     });
   }
 
-  protected processGetDepartamentosById(response: HttpResponseBase): Observable<PagedResultDtoOfDepartamentoDto> {
+  protected processGetDepartamentos(response: HttpResponseBase): Observable<PagedResultDtoOfDepartamentoDto> {
     const status = response.status;
     const responseBlob =
       response instanceof HttpResponse ? response.body :
@@ -430,71 +494,11 @@ export class FuncionarioServiceProxy {
     }
     return Observable.of<PagedResultDtoOfDepartamentoDto>(<any>null);
   }
-  
-
-    /**
-     * @return Success
-     */
-    getDepartamentos(): Observable<ListResultDtoOfDepartamentoDto> {
-      let url_ = this.baseUrl + "/api/services/app/Funcionario/Get/Departamentos";
-      url_ = url_.replace(/[?&]$/, "");
-
-      let options_: any = {
-          observe: "response",
-          responseType: "blob",
-          headers: new HttpHeaders({
-              "Content-Type": "application/json",
-              "Accept": "application/json"
-          })
-      };
-
-      return this.http.request("get", url_, options_).flatMap((response_: any) => {
-          return this.processGetDepartamentos(response_);
-      }).catch((response_: any) => {
-          if (response_ instanceof HttpResponseBase) {
-              try {
-                  return this.processGetDepartamentos(<any>response_);
-              } catch (e) {
-                  return <Observable<ListResultDtoOfDepartamentoDto>><any>Observable.throw(e);
-              }
-          } else
-              return <Observable<ListResultDtoOfDepartamentoDto>><any>Observable.throw(response_);
-      });
-  }
-
-  protected processGetDepartamentos(response: HttpResponseBase): Observable<ListResultDtoOfDepartamentoDto> {
-      const status = response.status;
-      const responseBlob =
-          response instanceof HttpResponse ? response.body :
-              (<any>response).error instanceof Blob ? (<any>response).error : undefined;
-
-      let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } };
-      if (status === 200) {
-          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
-              let result200: any = null;
-              let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-              result200 = resultData200 ? ListResultDtoOfDepartamentoDto.fromJS(resultData200) : new ListResultDtoOfDepartamentoDto();
-              return Observable.of(result200);
-          });
-      } else if (status === 401) {
-          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
-              return ServiceProxy.throwException("A server error occurred.", status, _responseText, _headers);
-          });
-      } else if (status === 403) {
-          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
-              return ServiceProxy.throwException("A server error occurred.", status, _responseText, _headers);
-          });
-      } else if (status !== 200 && status !== 204) {
-          return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
-              return ServiceProxy.throwException("An unexpected server error occurred.", status, _responseText, _headers);
-          });
-      }
-      return Observable.of<ListResultDtoOfDepartamentoDto>(<any>null);
-  }
 }
 
 export class CreateFuncionarioDto implements ICreateFuncionarioDto {
   nome: string;
+  departamentoIds: number[];
 
   static fromJS(data: any): CreateFuncionarioDto {
     data = typeof data === 'object' ? data : {};
@@ -516,12 +520,24 @@ export class CreateFuncionarioDto implements ICreateFuncionarioDto {
   init(data?: any) {
     if (data) {
       this.nome = data['nome'];
+      if (data['departamentoIds'] && data['departamentoIds'].constructor === Array) {
+        this.departamentoIds = [];
+        for (const item of data['departamentoIds']) {
+          this.departamentoIds.push(item);
+        }
+      }
     }
   }
 
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['nome'] = this.nome;
+    if (this.departamentoIds && this.departamentoIds.constructor === Array) {
+      data['departamentoIds'] = [];
+      for (const item of this.departamentoIds) {
+        data['departamentoIds'].push(item);
+      }
+    }
     return data;
   }
 
@@ -535,11 +551,12 @@ export class CreateFuncionarioDto implements ICreateFuncionarioDto {
 
 export interface ICreateFuncionarioDto {
   nome: string;
+  departamentoIds: number[];
 }
 
 export class FuncionarioDto implements IFuncionarioDto {
   nome: string;
-  funcionarios: string[] | undefined;
+  departamentoIds: number[];
   id: number | undefined;
 
   static fromJS(data: any): FuncionarioDto {
@@ -562,10 +579,10 @@ export class FuncionarioDto implements IFuncionarioDto {
   init(data?: any) {
     if (data) {
       this.nome = data['nome'];
-      if (data['funcionarios'] && data['funcionarios'].constructor === Array) {
-        this.funcionarios = [];
-        for (const item of data['funcionarios']) {
-          this.funcionarios.push(item);
+      if (data['departamentoIds'] && data['departamentoIds'].constructor === Array) {
+        this.departamentoIds = [];
+        for (const item of data['departamentoIds']) {
+          this.departamentoIds.push(item);
         }
       }
       this.id = data['id'];
@@ -575,10 +592,10 @@ export class FuncionarioDto implements IFuncionarioDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['nome'] = this.nome;
-    if (this.funcionarios && this.funcionarios.constructor === Array) {
-      data['funcionarios'] = [];
-      for (const item of this.funcionarios) {
-        data['funcionarios'].push(item);
+    if (this.departamentoIds && this.departamentoIds.constructor === Array) {
+      data['departamentoIds'] = [];
+      for (const item of this.departamentoIds) {
+        data['departamentoIds'].push(item);
       }
     }
     data['id'] = this.id;
@@ -595,7 +612,7 @@ export class FuncionarioDto implements IFuncionarioDto {
 
 export interface IFuncionarioDto {
   nome: string;
-  funcionarios: string[] | undefined;
+  departamentoIds: number[];
   id: number | undefined;
 }
 
@@ -654,5 +671,59 @@ export class PagedResultDtoOfFuncionarioDto implements IPagedResultDtoOfFunciona
 
 export interface IPagedResultDtoOfFuncionarioDto {
   totalCount: number | undefined;
+  items: FuncionarioDto[] | undefined;
+}
+
+export class ListResultDtoOfFuncionarioDto implements IListResultDtoOfFuncionarioDto {
+  items: FuncionarioDto[] | undefined;
+
+  static fromJS(data: any): IListResultDtoOfFuncionarioDto {
+    data = typeof data === 'object' ? data : {};
+    const result = new ListResultDtoOfFuncionarioDto();
+    result.init(data);
+    return result;
+  }
+
+  constructor(data?: IListResultDtoOfFuncionarioDto) {
+    if (data) {
+      for (const property in data) {
+        if (data.hasOwnProperty(property)) {
+          (<any>this)[property] = (<any>data)[property];
+        }
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      if (data['items'] && data['items'].constructor === Array) {
+        this.items = [];
+        for (const item of data['items']) {
+          this.items.push(FuncionarioDto.fromJS(item));
+        }
+      }
+    }
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.items && this.items.constructor === Array) {
+      data['items'] = [];
+      for (const item of this.items) {
+        data['items'].push(item.toJSON());
+      }
+    }
+    return data;
+  }
+
+  clone() {
+    const json = this.toJSON();
+    const result = new ListResultDtoOfFuncionarioDto();
+    result.init(json);
+    return result;
+  }
+}
+
+export interface IListResultDtoOfFuncionarioDto {
   items: FuncionarioDto[] | undefined;
 }

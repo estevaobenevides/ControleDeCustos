@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, ElementRef, Injecto
 import { AppComponentBase } from '@shared/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap';
 import { CreateMovimentacaoDto, MovimentacaoServiceProxy } from '@shared/service-proxies/movimentacao-proxy';
+import { FuncionarioServiceProxy, FuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
+import { Observable } from 'rxjs/internal/Observable';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-movimentacao',
@@ -18,15 +21,25 @@ export class CreateMovimentacaoComponent extends AppComponentBase implements OnI
   active = false;
   saving = false;
   movimentacao: CreateMovimentacaoDto = null;
+  funcionarios: FuncionarioDto[] = [];
 
   constructor(
     injector: Injector,
-    private _movimentacaoService: MovimentacaoServiceProxy,
+    private _movimentacaoService: MovimentacaoServiceProxy
   ) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this._movimentacaoService.getFuncionarios()
+      .subscribe(result => {
+        this.funcionarios = result.items
+      })
+  }
+
+  filterFuncionarios(name: string) {
+    return this.funcionarios.filter(funcionario =>
+      funcionario.nome.toLowerCase().indexOf(name.toLowerCase()) === 0);
   }
 
   show(): void {

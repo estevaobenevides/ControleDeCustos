@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter, ElementRef, Injector } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren, Output, EventEmitter, ElementRef, Injector, QueryList } from '@angular/core';
 import { AppComponentBase } from '@shared/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap';
 import { CreateFuncionarioDto, FuncionarioServiceProxy } from '@shared/service-proxies/funcionario-proxy';
+import { DepartamentoDto } from '@shared/service-proxies/departamento-proxy';
 
 @Component({
   selector: 'app-create-funcionario',
@@ -12,13 +13,14 @@ export class CreateFuncionarioComponent extends AppComponentBase implements OnIn
 
   @ViewChild('createFuncionarioModal') modal: ModalDirective;
   @ViewChild('modalContent') modalContent: ElementRef;
+  @ViewChildren('inputDepartamentos') inputDepartamentos: QueryList<ElementRef>;
 
   @Output() modalSave: EventEmitter<any> = new EventEmitter<any>();
 
   active = false;
   saving = false;
   funcionario: CreateFuncionarioDto = null;
-  departamentos: DepartamentoDto[] = null; 
+  departamentos: DepartamentoDto[] = null;
 
   constructor(
     injector: Injector,
@@ -28,9 +30,9 @@ export class CreateFuncionarioComponent extends AppComponentBase implements OnIn
   }
 
   ngOnInit(): void {
-      this._funcionarioService.getDepartamentos()
+    this._funcionarioService.getDepartamentos()
       .subscribe((result) => {
-          this.departamentos = result.items;
+        this.departamentos = result.items;
       });
   }
 
@@ -46,6 +48,16 @@ export class CreateFuncionarioComponent extends AppComponentBase implements OnIn
 
   save(): void {
     this.saving = true;
+    const departamentos = [];
+    this.inputDepartamentos.forEach(
+      (departamento) =>
+        departamentos.push(parseInt(departamento.nativeElement.getAttribute('value'), 0))
+    )
+    if (departamentos.length === 0) {
+      this.notify.warn('Selecione pelo menos um departamento.');
+      return;
+    }
+    this.funcionario.departamentoIds = departamentos;
     this._funcionarioService.create(this.funcionario)
       .finally(() => { this.saving = false; })
       .subscribe(() => {

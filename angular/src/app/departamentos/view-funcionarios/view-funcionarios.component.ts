@@ -3,7 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap';
 import { AppComponentBase } from '@shared/app-component-base';
 import { DepartamentoServiceProxy } from '@shared/service-proxies/departamento-proxy';
 import { PagedRequestDto } from '@shared/paged-listing-component-base';
-import { FuncionarioDto, PagedResultDtoOfFuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
+import { FuncionarioDto, ListResultDtoOfFuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
 
 @Component({
   selector: 'app-view-funcionarios',
@@ -11,13 +11,6 @@ import { FuncionarioDto, PagedResultDtoOfFuncionarioDto } from '@shared/service-
   styleUrls: ['./view-funcionarios.component.css']
 })
 export class ViewFuncionariosComponent extends AppComponentBase {
-
-  protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
-    throw new Error("Method not implemented.");
-  }
-  protected delete(entity: FuncionarioDto): void {
-    throw new Error("Method not implemented.");
-  }
 
   @ViewChild('viewFuncionarioModal') modal: ModalDirective;
   @ViewChild('modalContent') modalContent: ElementRef;
@@ -34,8 +27,8 @@ export class ViewFuncionariosComponent extends AppComponentBase {
   }
 
   listByDepartamento(id: number): void {
-    this._departamentoService.getFuncionarios(id)
-      .subscribe((result: PagedResultDtoOfFuncionarioDto) => {
+    this._departamentoService.getFuncionariosById(id)
+      .subscribe((result: ListResultDtoOfFuncionarioDto) => {
         this.funcionarios = result.items;
         this.active = true;
         this.modal.show();
@@ -49,6 +42,13 @@ export class ViewFuncionariosComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modal.hide();
+  }
+
+  protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
+    throw new Error('Method not implemented.');
+  }
+  protected delete(entity: FuncionarioDto): void {
+    throw new Error('Method not implemented.');
   }
 
 }

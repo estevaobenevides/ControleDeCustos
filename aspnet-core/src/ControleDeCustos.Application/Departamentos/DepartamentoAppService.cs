@@ -26,7 +26,13 @@ namespace ControleDeCustos.Departamentos
             _funcionarioManager = funcionarioManager;
         }
         
-        public async Task<ListResultDto<FuncionarioDto>> GetFuncionarios(EntityDto<int> input)
+        public async Task<ListResultDto<FuncionarioDto>> GetAllFuncionarios()
+        {
+            var entity = await _funcionarioManager.GetAllList();
+            return new ListResultDto<FuncionarioDto>(ObjectMapper.Map<List<FuncionarioDto>>(entity));
+        }
+
+        public async Task<ListResultDto<FuncionarioDto>> GetFuncionariosById(EntityDto<int> input)
         {
             var entity = await _funcionarioManager.GetAllByDepartamento(input.Id);
             return new ListResultDto<FuncionarioDto>(ObjectMapper.Map<List<FuncionarioDto>>(entity));
@@ -53,17 +59,14 @@ namespace ControleDeCustos.Departamentos
 
         protected override IQueryable<Departamento> CreateFilteredQuery(PagedResultRequestDto input)
         {
-            return Repository.GetAllIncluding(x => x.Funcionarios);
+            return Repository.GetAllIncluding(x => x.Funcionarios).Where(d => !d.IsDeleted);
         }
 
         protected override DepartamentoDto MapToEntityDto(Departamento entity)
         {
-            return new DepartamentoDto
-            {
-                Id = entity.Id,
-                Nome = entity.Nome,
-                QuantidadeFuncionarios = entity.Funcionarios == null ? 0 : entity.Funcionarios.Count
-            };
+            var output = base.MapToEntityDto(entity);
+            output.QuantidadeFuncionarios = entity.Funcionarios == null ? 0 : entity.Funcionarios.Count;
+            return output;
         }
 
         protected override void MapToEntity(DepartamentoDto updateInput, Departamento entity)

@@ -12,13 +12,6 @@ import { DepartamentoDto, PagedResultDtoOfDepartamentoDto } from '@shared/servic
 })
 export class ViewDepartamentosComponent extends AppComponentBase {
 
-  protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
-    throw new Error("Method not implemented.");
-  }
-  protected delete(entity: DepartamentoDto): void {
-    throw new Error("Method not implemented.");
-  }
-
   @ViewChild('viewDepartamentoModal') modal: ModalDirective;
   @ViewChild('modalContent') modalContent: ElementRef;
 
@@ -49,6 +42,13 @@ export class ViewDepartamentosComponent extends AppComponentBase {
   close(): void {
     this.active = false;
     this.modal.hide();
+  }
+
+  protected list(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
+    throw new Error('Method not implemented.');
+  }
+  protected delete(entity: DepartamentoDto): void {
+    throw new Error('Method not implemented.');
   }
 
 }

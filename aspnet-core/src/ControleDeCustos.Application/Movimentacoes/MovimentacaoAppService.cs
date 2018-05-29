@@ -5,22 +5,35 @@ using ControleDeCustos.Models;
 using ControleDeCustos.Managers;
 using Abp.Application.Services.Dto;
 using Abp.Domain.Repositories;
+using ControleDeCustos.Funcionarios.Dto;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ControleDeCustos.Movimentacoes
 {
     public class MovimentacaoAppService : AsyncCrudAppService<Movimentacao, MovimentacaoDto, int, PagedResultRequestDto, CreateMovimentacaoDto, MovimentacaoDto>, IMovimentacaoAppService
     {
         private readonly IMovimentacaoManager _movimentacaoManager;
+        private readonly IFuncionarioManager _funcionarioManager;
 
-        public MovimentacaoAppService(IRepository<Movimentacao> repository, IMovimentacaoManager movimentacaoManager)
-            : base(repository)
+        public MovimentacaoAppService(IRepository<Movimentacao> repository,
+            IMovimentacaoManager movimentacaoManager,
+            IFuncionarioManager funcionarioManager
+            ): base(repository)
         {
             _movimentacaoManager = movimentacaoManager;
+            _funcionarioManager = funcionarioManager;
+        }
+
+        public async Task<ListResultDto<FuncionarioDto>> GetAllFuncionarios()
+        {
+            var entity = await _funcionarioManager.GetAllList();
+            return new ListResultDto<FuncionarioDto>(ObjectMapper.Map<List<FuncionarioDto>>(entity));
         }
 
         public override async Task<MovimentacaoDto> Create(CreateMovimentacaoDto input)
         {
-            var entity = ObjectMapper.Map<Movimentacao>(input);
+            var entity = MapToEntity(input);
             var output = await _movimentacaoManager.Create(entity);
             return MapToEntityDto(output);
         }
@@ -35,6 +48,31 @@ namespace ControleDeCustos.Movimentacoes
             var entity = ObjectMapper.Map<Movimentacao>(input);
             var output = await _movimentacaoManager.Update(entity);
             return MapToEntityDto(output);
+        }
+
+        protected override Movimentacao MapToEntity(CreateMovimentacaoDto createInput)
+        {
+            var entity = base.MapToEntity(createInput);
+            entity.Funcionario = new Funcionario { Id = createInput.Funcionario };
+            return entity;
+        }
+
+        protected override MovimentacaoDto MapToEntityDto(Movimentacao entity)
+        {
+            var output = base.MapToEntityDto(entity);
+            output.Funcionario = entity.Funcionario.Nome;
+            return output;
+        }
+
+        protected override void MapToEntity(MovimentacaoDto updateInput, Movimentacao entity)
+        {
+            base.MapToEntity(updateInput, entity);
+            updateInput.Funcionario = entity.Funcionario.Nome;
+        }
+
+        protected override IQueryable<Movimentacao> CreateFilteredQuery(PagedResultRequestDto input)
+        {
+            return Repository.GetAllIncluding(x => x.Funcionario).Where(d => !d.IsDeleted);
         }
     }
 }

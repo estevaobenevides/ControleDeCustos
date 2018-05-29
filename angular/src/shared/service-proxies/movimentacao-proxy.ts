@@ -3,6 +3,7 @@ import { Injectable, Inject, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponseBase, HttpResponse } from '@angular/common/http';
 import { API_BASE_URL, ListResultDtoOfRoleDto, ServiceProxy } from './service-proxies';
 import { Observable } from 'rxjs/Observable';
+import { PagedResultDtoOfFuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
 
 @Injectable()
 export class MovimentacaoServiceProxy {
@@ -359,6 +360,70 @@ export class MovimentacaoServiceProxy {
       });
     }
     return Observable.of<PagedResultDtoOfMovimentacaoDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getFuncionarios(): Observable<PagedResultDtoOfFuncionarioDto> {
+    let url_ = this.baseUrl + '/api/services/app/Movimentacao/GetAllFuncionarios';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+    };
+
+    return this.http.request('get', url_, options_).flatMap((response_: any) => {
+      return this.processGetFuncionarios(response_);
+    }).catch((response_: any) => {
+      if (response_ instanceof HttpResponseBase) {
+        try {
+          return this.processGetFuncionarios(<any>response_);
+        } catch (e) {
+          return <Observable<PagedResultDtoOfFuncionarioDto>><any>Observable.throw(e);
+        }
+      } else {
+        return <Observable<PagedResultDtoOfFuncionarioDto>><any>Observable.throw(response_);
+      }
+    });
+  }
+
+  protected processGetFuncionarios(response: HttpResponseBase): Observable<PagedResultDtoOfFuncionarioDto> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse ? response.body :
+        (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    const _headers: any = {};
+    if (response.headers) {
+      for (const key of response.headers.keys()) { _headers[key] = response.headers.get(key); }
+    };
+    if (status === 200) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        let result200: any = null;
+        const resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? PagedResultDtoOfFuncionarioDto.fromJS(resultData200) : new PagedResultDtoOfFuncionarioDto();
+        return Observable.of(result200);
+      });
+    } else if (status === 401) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('A server error occurred.', status, _responseText, _headers);
+      });
+    } else if (status === 403) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('A server error occurred.', status, _responseText, _headers);
+      });
+    } else if (status !== 200 && status !== 204) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('An unexpected server error occurred.', status, _responseText, _headers);
+      });
+    }
+    return Observable.of<PagedResultDtoOfFuncionarioDto>(<any>null);
   }
 }
 

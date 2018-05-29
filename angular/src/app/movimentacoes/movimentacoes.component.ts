@@ -1,14 +1,15 @@
 import { Component, OnInit, Injector, ViewChild } from '@angular/core';
-import { appModuleAnimation } from '@shared/animations/routerTransition';
 import { PagedListingComponentBase, PagedRequestDto } from 'shared/paged-listing-component-base';
 import { MovimentacaoDto, MovimentacaoServiceProxy, PagedResultDtoOfMovimentacaoDto } from '@shared/service-proxies/movimentacao-proxy';
 import { EditMovimentacaoComponent } from './edit-movimentacao/edit-movimentacao.component';
 import { CreateMovimentacaoComponent } from './create-movimentacao/create-movimentacao.component';
+import { appModuleAnimation } from '@shared/animations/routerTransition';
 
 @Component({
   selector: 'app-movimentacoes',
   templateUrl: './movimentacoes.component.html',
-  styleUrls: ['./movimentacoes.component.css']
+  styleUrls: ['./movimentacoes.component.css'],
+  animations: [appModuleAnimation()]
 })
 export class MovimentacoesComponent extends PagedListingComponentBase<MovimentacaoDto> {
 

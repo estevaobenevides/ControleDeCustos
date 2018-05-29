@@ -1,8 +1,8 @@
-import { PagedResultDtoOfFuncionarioDto } from './funcionario-proxy';
+import { PagedResultDtoOfFuncionarioDto, ListResultDtoOfFuncionarioDto } from './funcionario-proxy';
 import * as moment from 'moment';
 import { Injectable, Inject, Optional } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponseBase, HttpResponse } from '@angular/common/http';
-import { API_BASE_URL, ListResultDtoOfRoleDto, ServiceProxy } from './service-proxies';
+import { API_BASE_URL, ServiceProxy } from './service-proxies';
 import { Observable } from 'rxjs/Observable';
 import { FuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
 
@@ -362,17 +362,81 @@ export class DepartamentoServiceProxy {
     }
     return Observable.of<PagedResultDtoOfDepartamentoDto>(<any>null);
   }
-  
+
   /**
    * @return Success
    */
-  getFuncionarios(id: number): Observable<PagedResultDtoOfFuncionarioDto> {
-    let url_ = this.baseUrl + '/api/services/app/Departamento/GetFuncionarios?';
+  getFuncionariosById(id: number): Observable<ListResultDtoOfFuncionarioDto> {
+    let url_ = this.baseUrl + '/api/services/app/Departamento/GetFuncionariosById?';
     if (id === undefined || id === null) {
       throw new Error('The parameter \'id\' must be defined and cannot be null.');
     } else {
       url_ += 'Id=' + encodeURIComponent('' + id) + '&';
     }
+    url_ = url_.replace(/[?&]$/, '');
+
+    const options_: any = {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+    };
+
+    return this.http.request('get', url_, options_).flatMap((response_: any) => {
+      return this.processGetFuncionariosById(response_);
+    }).catch((response_: any) => {
+      if (response_ instanceof HttpResponseBase) {
+        try {
+          return this.processGetFuncionariosById(<any>response_);
+        } catch (e) {
+          return <Observable<ListResultDtoOfFuncionarioDto>><any>Observable.throw(e);
+        }
+      } else {
+        return <Observable<ListResultDtoOfFuncionarioDto>><any>Observable.throw(response_);
+      }
+    });
+  }
+
+  protected processGetFuncionariosById(response: HttpResponseBase): Observable<ListResultDtoOfFuncionarioDto> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse ? response.body :
+        (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+    const _headers: any = {};
+    if (response.headers) {
+      for (const key of response.headers.keys()) { _headers[key] = response.headers.get(key); }
+    };
+    if (status === 200) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        let result200: any = null;
+        const resultData200 = _responseText === '' ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = resultData200 ? ListResultDtoOfFuncionarioDto.fromJS(resultData200) : new ListResultDtoOfFuncionarioDto();
+        return Observable.of(result200);
+      });
+    } else if (status === 401) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('A server error occurred.', status, _responseText, _headers);
+      });
+    } else if (status === 403) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('A server error occurred.', status, _responseText, _headers);
+      });
+    } else if (status !== 200 && status !== 204) {
+      return ServiceProxy.blobToText(responseBlob).flatMap(_responseText => {
+        return ServiceProxy.throwException('An unexpected server error occurred.', status, _responseText, _headers);
+      });
+    }
+    return Observable.of<ListResultDtoOfFuncionarioDto>(<any>null);
+  }
+
+  /**
+   * @return Success
+   */
+  getFuncionarios(): Observable<PagedResultDtoOfFuncionarioDto> {
+    let url_ = this.baseUrl + '/api/services/app/Funcionario/GetAllFuncionarios';
     url_ = url_.replace(/[?&]$/, '');
 
     const options_: any = {
@@ -584,5 +648,59 @@ export class PagedResultDtoOfDepartamentoDto implements IPagedResultDtoOfDeparta
 
 export interface IPagedResultDtoOfDepartamentoDto {
   totalCount: number | undefined;
+  items: DepartamentoDto[] | undefined;
+}
+
+export class ListResultDtoOfDepartamentoDto implements IListResultDtoOfDepartamentoDto {
+  items: DepartamentoDto[] | undefined;
+
+  static fromJS(data: any): ListResultDtoOfDepartamentoDto {
+    data = typeof data === 'object' ? data : {};
+    const result = new ListResultDtoOfDepartamentoDto();
+    result.init(data);
+    return result;
+  }
+
+  constructor(data?: IListResultDtoOfDepartamentoDto) {
+    if (data) {
+      for (const property in data) {
+        if (data.hasOwnProperty(property)) {
+          (<any>this)[property] = (<any>data)[property];
+        }
+      }
+    }
+  }
+
+  init(data?: any) {
+    if (data) {
+      if (data['items'] && data['items'].constructor === Array) {
+        this.items = [];
+        for (const item of data['items']) {
+          this.items.push(DepartamentoDto.fromJS(item));
+        }
+      }
+    }
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (this.items && this.items.constructor === Array) {
+      data['items'] = [];
+      for (const item of this.items) {
+        data['items'].push(item.toJSON());
+      }
+    }
+    return data;
+  }
+
+  clone() {
+    const json = this.toJSON();
+    const result = new ListResultDtoOfDepartamentoDto();
+    result.init(json);
+    return result;
+  }
+}
+
+export interface IListResultDtoOfDepartamentoDto {
   items: DepartamentoDto[] | undefined;
 }
