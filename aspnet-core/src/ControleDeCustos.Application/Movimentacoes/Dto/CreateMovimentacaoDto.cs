@@ -7,7 +7,7 @@ namespace ControleDeCustos.Movimentacoes.Dto
     public class CreateMovimentacaoDto
     {
         public string Descricao { get; set; }
-        public int Funcionario { get; set; }
+        public int FuncionarioId { get; set; }
         public decimal Valor { get; set; }
     }
 }

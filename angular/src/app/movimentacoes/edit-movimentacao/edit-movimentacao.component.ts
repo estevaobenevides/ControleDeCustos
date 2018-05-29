@@ -2,6 +2,7 @@ import { Component, ViewChild, Injector, Output, EventEmitter, ElementRef } from
 import { ModalDirective } from 'ngx-bootstrap';
 import { AppComponentBase } from '@shared/app-component-base';
 import { MovimentacaoDto, MovimentacaoServiceProxy } from '@shared/service-proxies/movimentacao-proxy';
+import { FuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
 
 @Component({
   selector: 'app-edit-movimentacao',
@@ -19,6 +20,8 @@ export class EditMovimentacaoComponent extends AppComponentBase {
   saving = false;
 
   movimentacao: MovimentacaoDto = null;
+  funcionarios: FuncionarioDto[] = [];
+  funcionarioSelecionado: FuncionarioDto = null;
 
   constructor(
     injector: Injector,
@@ -27,11 +30,21 @@ export class EditMovimentacaoComponent extends AppComponentBase {
     super(injector);
   }
 
+  ngOnInit(): void {
+    this._movimentacaoService.getFuncionarios()
+      .subscribe(result => {
+        this.funcionarios = result.items
+      })
+  }
+
   show(id: number): void {
     this._movimentacaoService.get(id)
       .subscribe(
         (result) => {
           this.movimentacao = result;
+          this.funcionarioSelecionado = new FuncionarioDto()
+          this.funcionarioSelecionado.id = result.funcionarioId;
+          this.funcionarioSelecionado.nome = result.funcionarioNome;
           this.active = true;
           this.modal.show();
         }
@@ -44,6 +57,7 @@ export class EditMovimentacaoComponent extends AppComponentBase {
 
   save(): void {
     this.saving = true;
+    this.movimentacao.funcionarioId = this.funcionarioSelecionado.id;
     this._movimentacaoService.update(this.movimentacao)
       .finally(() => { this.saving = false; })
       .subscribe(() => {

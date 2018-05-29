@@ -36,7 +36,7 @@
             <tr *ngFor="let movimentacao of movimentacoes | paginate: { id: 'server', itemsPerPage: pageSize, currentPage: pageNumber, totalItems: totalItems }">
               <td>{{movimentacao.descricao}}</td>
               <td>{{movimentacao.valor | currency:'BRL'}}</td>
-              <td>{{movimentacao.funcionario}}</td>
+              <td>{{movimentacao.funcionarioNome}}</td>
               <td class="dropdown">
                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">more_horiz</i>

@@ -34,6 +34,8 @@ namespace ControleDeCustos.Movimentacoes
         public override async Task<MovimentacaoDto> Create(CreateMovimentacaoDto input)
         {
             var entity = MapToEntity(input);
+            var funcionario = await _funcionarioManager.GetById(input.FuncionarioId);
+            entity.Funcionario = funcionario;
             var output = await _movimentacaoManager.Create(entity);
             return MapToEntityDto(output);
         }
@@ -46,6 +48,8 @@ namespace ControleDeCustos.Movimentacoes
         public override async Task<MovimentacaoDto> Update(MovimentacaoDto input)
         {
             var entity = ObjectMapper.Map<Movimentacao>(input);
+            var funcionario = await _funcionarioManager.GetById(input.FuncionarioId);
+            entity.Funcionario = funcionario;
             var output = await _movimentacaoManager.Update(entity);
             return MapToEntityDto(output);
         }
@@ -53,21 +57,23 @@ namespace ControleDeCustos.Movimentacoes
         protected override Movimentacao MapToEntity(CreateMovimentacaoDto createInput)
         {
             var entity = base.MapToEntity(createInput);
-            entity.Funcionario = new Funcionario { Id = createInput.Funcionario };
+            entity.Funcionario = new Funcionario { Id = createInput.FuncionarioId };
             return entity;
         }
 
         protected override MovimentacaoDto MapToEntityDto(Movimentacao entity)
         {
             var output = base.MapToEntityDto(entity);
-            output.Funcionario = entity.Funcionario.Nome;
+            var funcionario = _funcionarioManager.GetById(entity.Id).Result;
+            output.FuncionarioId = funcionario.Id;
+            output.FuncionarioNome = funcionario.Nome;
             return output;
         }
 
         protected override void MapToEntity(MovimentacaoDto updateInput, Movimentacao entity)
         {
             base.MapToEntity(updateInput, entity);
-            updateInput.Funcionario = entity.Funcionario.Nome;
+            updateInput.FuncionarioNome = entity.Funcionario.Nome;
         }
 
         protected override IQueryable<Movimentacao> CreateFilteredQuery(PagedResultRequestDto input)

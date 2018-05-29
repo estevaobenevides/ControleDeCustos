@@ -30,12 +30,17 @@
             <div class="col-sm-12">
               <div class="form-group form-float">
                 <div class="form-line">
-                  <input matInput placeholder="Funcionário" aria-label="Funcionário" [matAutocomplete]="auto" required class="validate form-control">
-                  <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let funcionario of funcionarios" [value]="funcionario.id">
-                      {{ funcionario.nome }}
-                    </mat-option>
-                  </mat-autocomplete>
+                  <div class="dropdown">
+                    <a href="javascript:void(0);" class="waves-effect waves-block() dropdown-toggle" data-toggle="dropdown" role="button">
+                      {{funcionarioSelecionado ? funcionarioSelecionado.nome : 'Selecione um funcionário'}}
+                      <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li *ngFor="let funcionario of funcionarios">
+                        <a *ngIf="!funcionarioSelecionado || funcionario.id != funcionarioSelecionado.id" (click)="changeFuncionario(funcionario)">{{funcionario.nome}}</a>
+                      </li>
+                    </ul>
+                  </div>                                   
                 </div>
               </div>
             </div>

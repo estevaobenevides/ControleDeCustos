@@ -45,7 +45,11 @@ import { EditMovimentacaoComponent } from './movimentacoes/edit-movimentacao/edi
 import { ViewFuncionariosComponent } from './departamentos/view-funcionarios/view-funcionarios.component';
 import { ViewDepartamentosComponent } from './funcionarios/view-departamentos/view-departamentos.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
-import { MatAutocompleteModule } from '@angular/material';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
 
 @NgModule({
     declarations: [
@@ -91,11 +95,10 @@ import { MatAutocompleteModule } from '@angular/material';
         ServiceProxyModule,
         SharedModule,
         NgxPaginationModule,
-        CurrencyMaskModule,
-        MatAutocompleteModule
+        CurrencyMaskModule
     ],
     providers: [
-
+        { provide: LOCALE_ID, useValue: 'pt-BR' }    
     ]
 })
 export class AppModule { }

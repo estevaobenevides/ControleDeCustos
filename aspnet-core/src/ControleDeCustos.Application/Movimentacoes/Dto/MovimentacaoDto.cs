@@ -8,7 +8,8 @@ namespace ControleDeCustos.Movimentacoes.Dto
     public class MovimentacaoDto : EntityDto<int>
     {
         public string Descricao { get; set; }
-        public string Funcionario { get; set; }
+        public int FuncionarioId { get; set; }
+        public string FuncionarioNome { get; set; }
         public decimal Valor { get; set; }
     }
 }

@@ -1,9 +1,10 @@
-<div bsModal #editDepartamentoModal="bs-modal" class="modal fade" (onShown)="onShown()" tabindex="-1" role="dialog" aria-labelledby="editDepartamentoModal"
+<div bsModal #editMovimentacaoModal="bs-modal" class="modal fade" (onShown)="onShown()" tabindex="-1" role="dialog" aria-labelledby="editMovimentacaoModal"
   aria-hidden="true" [config]="{backdrop: 'static'}">
   <div class="modal-dialog">
 
     <div #modalContent class="modal-content">
-      <form *ngIf="active" #editDepartamentoForm="ngForm" id="frm_edit_movimentacao" novalidate (ngSubmit)="save()">
+
+      <form *ngIf="active" #editMovimentacaoForm="ngForm" id="frm_edit_movimentacao" novalidate (ngSubmit)="save()">
         <div class="modal-header">
           <button type="button" class="close" (click)="close()" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -29,8 +30,17 @@
             <div class="col-sm-12">
               <div class="form-group form-float">
                 <div class="form-line">
-                  <input id="funcionario" type="text" name="Funcionario" [(ngModel)]="movimentacao.funcionario" required maxlength="32" class="validate form-control">
-                  <label for="funcionario" class="form-label">Funcionário</label>
+                  <div class="dropdown">
+                    <a href="javascript:void(0);" class="waves-effect waves-block() dropdown-toggle" data-toggle="dropdown" role="button">
+                      {{funcionarioSelecionado ? funcionarioSelecionado.nome : 'Selecione um funcionário'}}
+                      <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                      <li *ngFor="let funcionario of funcionarios">
+                        <a *ngIf="!funcionarioSelecionado || funcionario.id != funcionarioSelecionado.id" (click)="changeFuncionario(funcionario)">{{funcionario.nome}}</a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -40,7 +50,8 @@
             <div class="col-sm-12">
               <div class="form-group form-float">
                 <div class="form-line">
-                  <input id="valor" type="text" name="Valor" [(ngModel)]="movimentacao.valor" required maxlength="32" class="validate form-control">
+                  <input id="valor" type="text" currencyMask name="Valor" [(ngModel)]="movimentacao.valor" required maxlength="32" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+                    class="validate form-control">
                   <label for="valor" class="form-label">Valor</label>
                 </div>
               </div>

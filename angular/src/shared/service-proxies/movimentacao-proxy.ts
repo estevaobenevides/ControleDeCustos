@@ -429,6 +429,7 @@ export class MovimentacaoServiceProxy {
 
 export class CreateMovimentacaoDto implements ICreateMovimentacaoDto {
   descricao: string;
+  funcionarioId: number;
   valor: number;
 
   static fromJS(data: any): CreateMovimentacaoDto {
@@ -451,6 +452,7 @@ export class CreateMovimentacaoDto implements ICreateMovimentacaoDto {
   init(data?: any) {
     if (data) {
       this.descricao = data['descricao'];
+      this.funcionarioId = data['funcionarioId'];
       this.valor = data['valor'];
     }
   }
@@ -458,6 +460,7 @@ export class CreateMovimentacaoDto implements ICreateMovimentacaoDto {
   toJSON(data?: any) {
     data = typeof data === 'object' ? data : {};
     data['descricao'] = this.descricao;
+    data['funcionarioId'] = this.funcionarioId;
     data['valor'] = this.valor;
     return data;
   }
@@ -472,13 +475,15 @@ export class CreateMovimentacaoDto implements ICreateMovimentacaoDto {
 
 export interface ICreateMovimentacaoDto {
   descricao: string;
+  funcionarioId: number;
   valor: number;
 }
 
 export class MovimentacaoDto implements IMovimentacaoDto {
   descricao: string;
   valor: number;
-  funcionario: string;
+  funcionarioNome: string;
+  funcionarioId: number;
   id: number | undefined;
 
   static fromJS(data: any): MovimentacaoDto {
@@ -502,7 +507,8 @@ export class MovimentacaoDto implements IMovimentacaoDto {
     if (data) {
       this.descricao = data['descricao'];
       this.valor = data['valor'];
-      this.funcionario = data['funcionario'];
+      this.funcionarioNome = data['funcionarioNome'];
+      this.funcionarioId = data['funcionarioId'];
       this.id = data['id'];
     }
   }
@@ -511,7 +517,8 @@ export class MovimentacaoDto implements IMovimentacaoDto {
     data = typeof data === 'object' ? data : {};
     data['descricao'] = this.descricao;
     data['valor'] = this.valor;
-    data['funcionario'] = this.funcionario;
+    data['funcionarioNome'] = this.funcionarioNome;
+    data['funcionarioId'] = this.funcionarioId;
     data['id'] = this.id;
     return data;
   }
@@ -527,7 +534,8 @@ export class MovimentacaoDto implements IMovimentacaoDto {
 export interface IMovimentacaoDto {
   descricao: string;
   valor: number;
-  funcionario: string;
+  funcionarioNome: string;
+  funcionarioId: number;
   id: number | undefined;
 }
 

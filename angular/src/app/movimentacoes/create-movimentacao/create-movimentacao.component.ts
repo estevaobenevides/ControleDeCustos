@@ -3,8 +3,6 @@ import { AppComponentBase } from '@shared/app-component-base';
 import { ModalDirective } from 'ngx-bootstrap';
 import { CreateMovimentacaoDto, MovimentacaoServiceProxy } from '@shared/service-proxies/movimentacao-proxy';
 import { FuncionarioServiceProxy, FuncionarioDto } from '@shared/service-proxies/funcionario-proxy';
-import { Observable } from 'rxjs/internal/Observable';
-import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-movimentacao',
@@ -22,6 +20,7 @@ export class CreateMovimentacaoComponent extends AppComponentBase implements OnI
   saving = false;
   movimentacao: CreateMovimentacaoDto = null;
   funcionarios: FuncionarioDto[] = [];
+  funcionarioSelecionado: FuncionarioDto = null;
 
   constructor(
     injector: Injector,
@@ -37,11 +36,6 @@ export class CreateMovimentacaoComponent extends AppComponentBase implements OnI
       })
   }
 
-  filterFuncionarios(name: string) {
-    return this.funcionarios.filter(funcionario =>
-      funcionario.nome.toLowerCase().indexOf(name.toLowerCase()) === 0);
-  }
-
   show(): void {
     this.active = true;
     this.modal.show();
@@ -54,6 +48,7 @@ export class CreateMovimentacaoComponent extends AppComponentBase implements OnI
 
   save(): void {
     this.saving = true;
+    this.movimentacao.funcionarioId = this.funcionarioSelecionado.id;
     this._movimentacaoService.create(this.movimentacao)
       .finally(() => { this.saving = false; })
       .subscribe(() => {
@@ -66,6 +61,10 @@ export class CreateMovimentacaoComponent extends AppComponentBase implements OnI
   close(): void {
     this.active = false;
     this.modal.hide();
+  }
+
+  changeFuncionario(funcionario: FuncionarioDto): void {
+    this.funcionarioSelecionado = funcionario;
   }
 
 }
